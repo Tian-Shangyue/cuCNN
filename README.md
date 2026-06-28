@@ -260,41 +260,6 @@ Layers only cache intermediate values (`input_cache_`, `max_indices_`) when `is_
 
 ---
 
-## Technical Highlights
-
-### Shared Memory Tiling
-
-The tiled Conv2D kernel loads input and weight tiles into shared memory, then each thread block computes partial convolutions. On a 3×3 kernel with stride=1, this achieves ~3-5× speedup over the naive implementation by reducing global memory reads from O(K×C×R×S) to O(K×C) per output element.
-
-### Template Metaprogramming for Kernel Selection
-
-Compile-time known parameters (kernel size, stride) are passed as template arguments, enabling the compiler to generate optimized indexing with zero runtime overhead:
-
-```cpp
-template<int R, int S, int stride_h, int stride_w>
-__global__ void conv2d_tiled(...) {
-    __shared__ float shm_input[TILE_SIZE*stride_h+R-stride_h]
-                               [TILE_SIZE*stride_w+S-stride_w][C_TILE];
-    // Compiler knows all array dimensions — no manual offset calculation
-}
-```
-
-### Joint Softmax + CrossEntropy Gradient
-
-Instead of computing the full D×D Softmax Jacobian (O(D²)), the loss kernel computes the combined gradient `y_pred - y_true` in O(D) during the forward pass:
-
-```cpp
-// In cross_entropy_forward kernel:
-float prob = exp(x_i - max) / sum;
-grad[i] = prob - (i == target ? 1.0f : 0.0f);  // O(D) instead of O(D²)
-```
-
-### Pinned Memory for Fast Data Transfer
-
-The DataLoader uses `cudaMallocHost` to allocate page-locked memory, enabling DMA-driven H→D transfers at near-PCIe bandwidth (~12 GB/s vs ~6 GB/s for pageable memory).
-
----
-
 ## Performance Notes
 
 This is an educational framework — it prioritizes clarity and correctness over raw speed. That said:
