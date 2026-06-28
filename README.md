@@ -262,12 +262,7 @@ Layers only cache intermediate values (`input_cache_`, `max_indices_`) when `is_
 
 ## Performance Notes
 
-This is an educational framework — it prioritizes clarity and correctness over raw speed. That said:
-
-- The tiled Conv2D kernel achieves ~70-80% of cuDNN throughput on 3×3 convolutions
-- The tiled Linear kernel (GEMM) is within 2× of cuBLAS for typical layer sizes
-- All backward kernels use atomic operations for correctness in overlapping regions (pool layers)
-
+This is an educational framework — it prioritizes clarity and correctness over raw speed. 
 For production use, frameworks like PyTorch/TensorFlow with cuDNN backend are recommended.
 
 ---
