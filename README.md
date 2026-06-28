@@ -6,8 +6,7 @@
 
 A minimal CNN framework written entirely in CUDA C++, built from the ground up as a **learning project**. No cuDNN, no cuBLAS — just raw CUDA kernels, hand-optimized with shared memory tiling, template metaprogramming, and grid-stride loops.
 
-> **Why?** The best way to understand how deep learning frameworks work is to build one. Every convolution, every gradient, every parameter update is written kernel by kernel.
->
+
 > **⚠️ This is a simple learning project with many limitations.** It only supports 2D convolution for image tasks — no BatchNorm, no Dropout, no residual connections, no RNN/Transformer. The backward kernels use naive implementations without deep optimization. Currently only tested on MNIST and FashionMNIST. It is not comparable to production frameworks like PyTorch or TensorFlow. If you're also learning CUDA and CNN internals, hope this project can be a useful reference.
 
 ---
@@ -305,15 +304,6 @@ This is an educational framework — it prioritizes clarity and correctness over
 - All backward kernels use atomic operations for correctness in overlapping regions (pool layers)
 
 For production use, frameworks like PyTorch/TensorFlow with cuDNN backend are recommended.
-
----
-
-## References
-
-- [CUDA C++ Programming Guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/)
-- Stanford CS231n: [Convolutional Neural Networks for Visual Recognition](http://cs231n.stanford.edu/)
-- [Understanding Convolution Backward Pass](https://pavisj.medium.com/convolutions-backpropagations-2a61f1b4b8c9)
-- MNIST Database: [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)
 
 ---
 
