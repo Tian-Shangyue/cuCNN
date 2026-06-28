@@ -1,0 +1,6 @@
+*.o
+*.d
+*.exe
+*.out
+cnn_demo
+test/test_*
